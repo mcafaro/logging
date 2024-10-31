@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      MATLAB_LOG_DIR: ${{ github.workspace }}/matlab.log
+      MATLAB_LOG_DIR: ${{ github.workspace }}/logs
       MW_DIAGNOSTIC_DEST: file
       MW_DIAGNOSTIC_SPEC: cppmicroservices::framework.*=all;install.*=all;
       MW_VERBOSE_HTTPCLIENT_CORE: 1
@@ -28,12 +28,7 @@ jobs:
 
       - name: Print MATLAB log if setup fails
         run: |
-          echo "Setup MATLAB failed. Printing matlab.log:"
-          if [ -f "${{ env.MATLAB_LOG_DIR }}" ]; then
-            cat "${{ env.MATLAB_LOG_DIR }}"
-          else
-            echo "matlab.log not found."
-          fi
+          cat "${{ env.MATLAB_LOG_DIR }}/*"
         shell: bash
         
       - name: Run tests and generate artifacts
