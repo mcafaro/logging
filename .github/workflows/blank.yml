@@ -26,7 +26,10 @@ jobs:
       - name: Setup MATLAB
         uses: matlab-actions/setup-matlab@v2
 
-      - name: Print MPM logs for debugging
-        run: |
-          for file in "${{ env.MATLAB_LOG_DIR }}"/*; do [ -f "$file" ] && echo "==> $file <==" && cat "$file"; done
-        shell: bash
+      - name: Upload MPM and MATLAB logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: matlab-logs
+          path: ${{ env.MATLAB_LOG_DIR }}
+          if-no-files-found: ignore
