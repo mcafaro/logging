@@ -1,0 +1,42 @@
+name: CI
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  myjob:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest, macos-13]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    env:
+      MATLAB_LOG_DIR: ${{ github.workspace }}/matlab.log
+      MW_DIAGNOSTIC_DEST: file
+      MW_DIAGNOSTIC_SPEC: cppmicroservices::framework.*=all;install.*=all;
+      MW_VERBOSE_HTTPCLIENT_CORE: 1
+      
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        
+      - name: Setup MATLAB
+        uses: matlab-actions/setup-matlab@v2
+
+      - name: Print MATLAB log if setup fails
+        run: |
+          echo "Setup MATLAB failed. Printing matlab.log:"
+          if [ -f "${{ env.MATLAB_LOG_DIR }}" ]; then
+            cat "${{ env.MATLAB_LOG_DIR }}"
+          else
+            echo "matlab.log not found."
+          fi
+        shell: bash
+        
+      - name: Run tests and generate artifacts
+        uses: matlab-actions/run-tests@v2
+        with:
+          source-folder: code
