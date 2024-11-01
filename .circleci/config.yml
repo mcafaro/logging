@@ -12,7 +12,7 @@ jobs:
       MW_VERBOSE_HTTPCLIENT_CORE: 1
     steps:
       - run:
-          command: echo $MATLAB_LOG_DIR
+          command: echo $0
           shell: bash
       # - checkout
       # - matlab/install:
